@@ -23,7 +23,7 @@
 ////            attempts++;
 ////
 ////            if (guess == target) {
-////                System.out.println("🎉 Correct! You guessed the number.");
+////                System.out.println(" Correct! You guessed the number.");
 ////                System.out.println("Attempts used: " + attempts);
 ////                break;
 ////            }
