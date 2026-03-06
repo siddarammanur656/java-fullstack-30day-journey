@@ -29,3 +29,15 @@ Day 2: Control Flow and Arrays
 - Explored ArrayList for dynamic data storage
 - Practiced iterating through arrays and ArrayLists using loops
 - Built a Student Grade Tracker CLI application that accepts marks and calculates average and grade
+
+Day 3: Methods and Recursion
+- Learned how to define and call methods in Java
+- Understood method parameters vs arguments
+- Explored how the call stack works when a method is executed
+- Learned the concept of pass-by-value for primitives and reference types
+- Practiced method overloading and how Java resolves overloaded methods
+- Implemented recursive methods with proper base cases and recursive calls
+- Studied recursion performance using the Fibonacci example
+- Learned optimization using memoization
+- Practiced several useful methods from the Java Math class
+- Built utility programs including **MathUtils** and a **Number Guessing Game**
