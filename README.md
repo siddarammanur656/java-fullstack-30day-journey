@@ -41,3 +41,14 @@ Day 3: Methods and Recursion
 - Learned optimization using memoization
 - Practiced several useful methods from the Java Math class
 - Built utility programs including **MathUtils** and a **Number Guessing Game**
+
+Day 4: Object-Oriented Programming (OOP)
+- Learned the core philosophy of Object-Oriented Programming and why it is used in modern software development
+- Studied classes and objects and understood how objects represent real-world entities in code
+- Explored how objects are stored in memory and how classes act as blueprints
+- Learned different types of constructors including default, parameterized, and constructor chaining
+- Practiced encapsulation by protecting class data using private fields with getters and setters
+- Understood the `this` keyword and its common uses inside class methods and constructors
+- Learned the purpose of `toString()`, `equals()`, and `hashCode()` methods
+- Compared static members and instance members and when to use each
+- Built a **Bank Account System** project implementing classes, constructors, and encapsulation

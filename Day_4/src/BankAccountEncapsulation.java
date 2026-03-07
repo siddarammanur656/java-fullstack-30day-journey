@@ -9,7 +9,7 @@
 
 
 //With encapsulation — safe:
-class BankAccount {
+class BankAccountEncapsulation {
     private double balance; // hidden from outside
 
     public void deposit(double amount) {
