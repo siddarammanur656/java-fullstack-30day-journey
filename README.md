@@ -52,3 +52,14 @@ Day 4: Object-Oriented Programming (OOP)
 - Learned the purpose of `toString()`, `equals()`, and `hashCode()` methods
 - Compared static members and instance members and when to use each
 - Built a **Bank Account System** project implementing classes, constructors, and encapsulation
+
+Day 5: Inheritance and Polymorphism
+- Learned the philosophy of inheritance and how it enables code reuse and hierarchical relationships between classes
+- Explored the `extends` keyword and how child classes inherit fields and methods from parent classes
+- Studied the `super` keyword and its uses for accessing parent constructors, methods, and fields
+- Practiced method overriding and understood the rules for overriding methods in Java
+- Learned polymorphism and the difference between compile-time and runtime polymorphism
+- Understood runtime method dispatch and how the JVM selects the correct method during execution
+- Explored the use of `instanceof` and type casting (upcasting and downcasting)
+- Learned the use of the `final` keyword for classes, methods, and variables
+- Built a **Shape Hierarchy and Drawing Engine** project demonstrating inheritance, overriding, and polymorphism
