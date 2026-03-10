@@ -63,3 +63,13 @@ Day 5: Inheritance and Polymorphism
 - Explored the use of `instanceof` and type casting (upcasting and downcasting)
 - Learned the use of the `final` keyword for classes, methods, and variables
 - Built a **Shape Hierarchy and Drawing Engine** project demonstrating inheritance, overriding, and polymorphism
+
+Day 6: Interfaces and Abstract Classes
+- Learned the concept of abstraction and why it is important for designing flexible and maintainable software
+- Studied abstract classes including rules, usage, and how they define shared behavior for subclasses
+- Explored interfaces in Java and how they define contracts that classes must implement
+- Understood the differences between abstract classes and interfaces and when each should be used
+- Practiced implementing multiple interfaces and using default methods
+- Learned the basics of functional interfaces and a preview of lambda expressions
+- Studied the SOLID principles and how they improve object-oriented design in Java
+- Built a **Payment Processing System** project using interfaces and abstract classes to handle multiple payment methods
