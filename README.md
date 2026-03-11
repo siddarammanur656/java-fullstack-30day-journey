@@ -73,3 +73,15 @@ Day 6: Interfaces and Abstract Classes
 - Learned the basics of functional interfaces and a preview of lambda expressions
 - Studied the SOLID principles and how they improve object-oriented design in Java
 - Built a **Payment Processing System** project using interfaces and abstract classes to handle multiple payment methods
+
+Day 7: Java Collections Framework
+- Learned the architecture of the Java Collections Framework and how different collection types are organized
+- Explored List implementations including ArrayList, LinkedList, and Vector and their differences in performance and usage
+- Studied Set implementations such as HashSet, LinkedHashSet, and TreeSet for storing unique elements
+- Learned Map implementations including HashMap, LinkedHashMap, and TreeMap for key-value data storage
+- Explored Queue, Deque, and Stack concepts and their common real-world use cases
+- Practiced sorting using Comparable and Comparator interfaces
+- Used the Collections utility class for common operations like sorting and searching
+- Learned how the Iterator pattern works to traverse collections safely
+- Understood how to choose the right collection based on performance and use case
+- Built a **Student Enrollment System** project using List, Set, and Map collections
