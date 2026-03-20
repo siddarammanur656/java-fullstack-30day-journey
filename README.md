@@ -85,3 +85,16 @@ Day 7: Java Collections Framework
 - Learned how the Iterator pattern works to traverse collections safely
 - Understood how to choose the right collection based on performance and use case
 - Built a **Student Enrollment System** project using List, Set, and Map collections
+
+Day 8: Exception Handling & Java I/O
+- Learned the concept of exceptions, how they occur, and how the JVM handles runtime errors
+- Explored different types of exceptions and the internal working of exception handling
+- Studied try, catch, and finally blocks and how they control program flow during errors
+- Practiced handling multiple exceptions using multi-catch blocks
+- Understood the difference between checked and unchecked exceptions and their design purpose
+- Learned how to create custom exceptions by extending Exception and RuntimeException classes
+- Explored advanced concepts like exception chaining and try-with-resources for automatic resource management
+- Studied Java I/O fundamentals including streams, readers, and writers
+- Practiced file handling operations such as reading, writing, appending, and navigating files
+- Built a **Student Report Card File System** project using exception handling and file I/O
+- Reviewed concepts through a mini quiz and recap session
