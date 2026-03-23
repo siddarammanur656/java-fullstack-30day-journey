@@ -98,3 +98,15 @@ Day 8: Exception Handling & Java I/O
 - Practiced file handling operations such as reading, writing, appending, and navigating files
 - Built a **Student Report Card File System** project using exception handling and file I/O
 - Reviewed concepts through a mini quiz and recap session
+
+Day 9: Spring Boot Fundamentals
+- Learned the fundamentals of Spring Boot and how it simplifies Java backend development
+- Understood the concept of Inversion of Control (IoC) and how the Spring container manages objects
+- Explored Dependency Injection and its types including constructor, setter, and field injection
+- Studied important Spring annotations such as @Component, @Service, @Repository, @Controller, and @Autowired
+- Set up a Spring Boot project from scratch using Spring Initializr and configured the development environment
+- Learned how to use application.properties to manage application configuration
+- Understood Maven as a build tool and how dependencies are managed in a Spring Boot project
+- Explored Spring Profiles to manage different configurations for development and production environments
+- Built a **Task Manager Backend** project by wiring components using Spring Boot
+- Reviewed key concepts through a mini quiz and recap session
