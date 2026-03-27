@@ -1,16 +1,18 @@
 package com.learning.taskmanager.controller;
 
+import com.learning.taskmanager.dto.*;
 import com.learning.taskmanager.model.Task;
 import com.learning.taskmanager.service.TaskService;
 import jakarta.validation.Valid;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
+import org.springframework.http.*;
 import org.springframework.web.bind.annotation.*;
 
+import java.net.URI;
 import java.util.List;
+import java.util.Map;
 
 @RestController
-@RequestMapping("/api/tasks")
+@RequestMapping("/api/v1/tasks")
 public class TaskController {
 
     private final TaskService taskService;
@@ -19,77 +21,117 @@ public class TaskController {
         this.taskService = taskService;
     }
 
+    // GET /api/v1/tasks
+    // GET /api/v1/tasks?keyword=spring
+    // GET /api/v1/tasks?status=TODO
     @GetMapping
-    public ResponseEntity<List<Task>> getAllTasks(
-            @RequestParam(required = false) String keyword,
-            @RequestParam(required = false) Task.TaskStatus status) {
+    public ResponseEntity<ApiResponse<List<TaskResponseDTO>>>
+    getAll(@RequestParam(required = false) String keyword,
+           @RequestParam(required = false) Task.TaskStatus status) {
 
-        List<Task> tasks;
+        List<Task> tasks = keyword != null ? taskService.search(keyword)
+                         : status  != null ? taskService.getByStatus(status)
+                         : taskService.getAll();
 
-        if (keyword != null) {
-            tasks = taskService.searchTasks(keyword);
-        } else if (status != null) {
-            tasks = taskService.getTasksByStatus(status);
-        } else {
-            tasks = taskService.getAllTasks();
+        return ResponseEntity.ok(
+            ApiResponse.success(
+                TaskResponseDTO.fromList(tasks),
+                "Found " + tasks.size() + " task(s)"
+            )
+        );
+    }
+
+    // GET /api/v1/tasks/1
+    @GetMapping("/{id}")
+    public ResponseEntity<ApiResponse<TaskResponseDTO>>
+    getById(@PathVariable Long id) {
+        return ResponseEntity.ok(
+            ApiResponse.success(
+                TaskResponseDTO.from(taskService.getById(id)),
+                "Task retrieved successfully"
+            )
+        );
+    }
+
+    // POST /api/v1/tasks
+    @PostMapping
+    public ResponseEntity<ApiResponse<TaskResponseDTO>>
+    create(@Valid @RequestBody TaskRequestDTO dto) {
+
+        Task created = taskService.create(dto);
+        URI location = URI.create("/api/v1/tasks/" + created.getId());
+
+        return ResponseEntity
+            .created(location)
+            .body(ApiResponse.success(
+                TaskResponseDTO.from(created),
+                "Task created successfully"
+            ));
+    }
+
+    // PUT /api/v1/tasks/1
+    @PutMapping("/{id}")
+    public ResponseEntity<ApiResponse<TaskResponseDTO>>
+    update(@PathVariable Long id,
+           @Valid @RequestBody TaskRequestDTO dto) {
+
+        return ResponseEntity.ok(
+            ApiResponse.success(
+                TaskResponseDTO.from(taskService.update(id, dto)),
+                "Task updated successfully"
+            )
+        );
+    }
+
+    // PATCH /api/v1/tasks/1/status
+    // Body: {"status": "IN_PROGRESS"}
+    @PatchMapping("/{id}/status")
+    public ResponseEntity<ApiResponse<TaskResponseDTO>>
+    updateStatus(@PathVariable Long id,
+                 @RequestBody Map<String, String> body) {
+
+        String statusStr = body.get("status");
+        if (statusStr == null)
+            throw new IllegalArgumentException(
+                "Body must contain 'status' field");
+
+        Task.TaskStatus newStatus;
+        try {
+            newStatus = Task.TaskStatus.valueOf(statusStr.toUpperCase());
+        } catch (IllegalArgumentException e) {
+            throw new IllegalArgumentException(
+                "Invalid status: " + statusStr +
+                ". Valid values: TODO, IN_PROGRESS, DONE, CANCELLED");
         }
 
-        return ResponseEntity.ok(tasks);
+        return ResponseEntity.ok(
+            ApiResponse.success(
+                TaskResponseDTO.from(
+                    taskService.updateStatus(id, newStatus)),
+                "Status updated to " + newStatus
+            )
+        );
     }
 
-    @GetMapping("/{id}")
-    public ResponseEntity<Task> getTaskById(@PathVariable Long id) {
-        Task task = taskService.getTaskById(id);
-        return ResponseEntity.ok(task);
-    }
-
-    @PostMapping
-    public ResponseEntity<Task> createTask(@Valid @RequestBody Task task) {
-        Task created = taskService.createTask(task);
-        return ResponseEntity.status(HttpStatus.CREATED).body(created);
-    }
-
-    @PutMapping("/{id}")
-    public ResponseEntity<Task> updateTask(
-            @PathVariable Long id,
-            @Valid @RequestBody Task task) {
-
-        Task updated = taskService.updateTask(id, task);
-        return ResponseEntity.ok(updated);
-    }
-
-    @PatchMapping("/{id}/status")
-    public ResponseEntity<Task> updateStatus(
-            @PathVariable Long id,
-            @RequestParam Task.TaskStatus newStatus) {
-
-        Task updated = taskService.updateStatus(id, newStatus);
-        return ResponseEntity.ok(updated);
-    }
-
+    // DELETE /api/v1/tasks/1
     @DeleteMapping("/{id}")
-    public ResponseEntity<Void> deleteTask(@PathVariable Long id) {
-        taskService.deleteTask(id);
-        return ResponseEntity.noContent().build();
+    public ResponseEntity<ApiResponse<Void>>
+    delete(@PathVariable Long id) {
+        taskService.delete(id);
+        return ResponseEntity.ok(
+            ApiResponse.success("Task deleted successfully")
+        );
     }
 
+    // GET /api/v1/tasks/stats
     @GetMapping("/stats")
-    public ResponseEntity<TaskService.TaskStats> getStats() {
-        return ResponseEntity.ok(taskService.getStats());
-    }
-
-    @ExceptionHandler(RuntimeException.class)
-    public ResponseEntity<String> handleException(RuntimeException e) {
-        return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Error: " + e.getMessage());
-    }
-
-    @ExceptionHandler(IllegalArgumentException.class)
-    public ResponseEntity<String> handleBadRequest(IllegalArgumentException e) {
-        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Bad Request: " + e.getMessage());
-    }
-
-    @ExceptionHandler(IllegalStateException.class)
-    public ResponseEntity<String> handleBadState(IllegalStateException e) {
-        return ResponseEntity.status(HttpStatus.CONFLICT).body("Conflict: " + e.getMessage());
+    public ResponseEntity<ApiResponse<Map<String, Long>>>
+    getStats() {
+        return ResponseEntity.ok(
+            ApiResponse.success(
+                taskService.getStats(),
+                "Statistics retrieved"
+            )
+        );
     }
 }

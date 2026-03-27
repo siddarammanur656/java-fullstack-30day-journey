@@ -1,11 +1,14 @@
 package com.learning.taskmanager.service;
 
+import com.learning.taskmanager.dto.TaskRequestDTO;
+import com.learning.taskmanager.exception.ResourceNotFoundException;
 import com.learning.taskmanager.model.Task;
 import com.learning.taskmanager.repository.TaskRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.Map;
 
 @Service
 @Transactional
@@ -17,92 +20,88 @@ public class TaskService {
         this.taskRepository = taskRepository;
     }
 
-    public Task createTask(Task task) {
-        boolean titleExists = taskRepository
-            .findByTitleContainingIgnoreCase(task.getTitle())
+    //CREATE
+    public Task create(TaskRequestDTO dto) {
+        // Check duplicate title
+        boolean exists = taskRepository
+            .findByTitleContainingIgnoreCase(dto.getTitle())
             .stream()
-            .anyMatch(t -> t.getTitle().equalsIgnoreCase(task.getTitle()));
+            .anyMatch(t ->
+                t.getTitle().equalsIgnoreCase(dto.getTitle()));
 
-        if (titleExists) {
-            throw new IllegalArgumentException(
-                "Task with title '" + task.getTitle() + "' already exists");
-        }
+        if (exists) throw new IllegalArgumentException(
+            "Task with title '" + dto.getTitle() + "' already exists");
 
+        Task task = new Task();
+        task.setTitle(dto.getTitle());
+        task.setDescription(dto.getDescription());
+        task.setPriority(dto.getPriority());
+        task.setDueDate(dto.getDueDate());
         task.setStatus(Task.TaskStatus.TODO);
+
         return taskRepository.save(task);
     }
 
+    //READ
     @Transactional(readOnly = true)
-    public List<Task> getAllTasks() {
+    public List<Task> getAll() {
         return taskRepository.findAllByOrderByCreatedAtDesc();
     }
 
     @Transactional(readOnly = true)
-    public Task getTaskById(Long id) {
+    public Task getById(Long id) {
         return taskRepository.findById(id)
             .orElseThrow(() ->
-                new RuntimeException("Task not found with id: " + id));
+                new ResourceNotFoundException("Task", id));
     }
 
     @Transactional(readOnly = true)
-    public List<Task> getTasksByStatus(Task.TaskStatus status) {
+    public List<Task> getByStatus(Task.TaskStatus status) {
         return taskRepository.findByStatus(status);
     }
 
     @Transactional(readOnly = true)
-    public List<Task> searchTasks(String keyword) {
-        if (keyword == null || keyword.isBlank()) {
-            return getAllTasks();
-        }
-        return taskRepository.findByTitleContainingIgnoreCase(keyword);
+    public List<Task> search(String keyword) {
+        if (keyword == null || keyword.isBlank()) return getAll();
+        return taskRepository
+               .findByTitleContainingIgnoreCase(keyword);
     }
 
-    public Task updateTask(Long id, Task updatedTask) {
-        Task existingTask = getTaskById(id);
-
-        if (updatedTask.getTitle() != null)
-            existingTask.setTitle(updatedTask.getTitle());
-
-        if (updatedTask.getDescription() != null)
-            existingTask.setDescription(updatedTask.getDescription());
-
-        if (updatedTask.getPriority() > 0)
-            existingTask.setPriority(updatedTask.getPriority());
-
-        if (updatedTask.getDueDate() != null)
-            existingTask.setDueDate(updatedTask.getDueDate());
-
-        return taskRepository.save(existingTask);
+    // UPDATE
+    public Task update(Long id, TaskRequestDTO dto) {
+        Task task = getById(id);
+        if (dto.getTitle()       != null) task.setTitle(dto.getTitle());
+        if (dto.getDescription() != null) task.setDescription(dto.getDescription());
+        if (dto.getPriority()    > 0)     task.setPriority(dto.getPriority());
+        if (dto.getDueDate()     != null) task.setDueDate(dto.getDueDate());
+        return taskRepository.save(task);
     }
 
     public Task updateStatus(Long id, Task.TaskStatus newStatus) {
-        Task task = getTaskById(id);
-
-        if (task.getStatus() == Task.TaskStatus.CANCELLED) {
-            throw new IllegalStateException("Cannot change status of cancelled task");
-        }
-
+        Task task = getById(id);
+        if (task.getStatus() == Task.TaskStatus.CANCELLED)
+            throw new IllegalStateException(
+                "Cannot update a cancelled task");
         task.setStatus(newStatus);
         return taskRepository.save(task);
     }
 
-    public void deleteTask(Long id) {
-        if (!taskRepository.existsById(id)) {
-            throw new RuntimeException("Task not found with id: " + id);
-        }
+    // DELETE
+    public void delete(Long id) {
+        if (!taskRepository.existsById(id))
+            throw new ResourceNotFoundException("Task", id);
         taskRepository.deleteById(id);
     }
 
+    // STATS
     @Transactional(readOnly = true)
-    public TaskStats getStats() {
-        long total       = taskRepository.count();
-        long todo        = taskRepository.countByStatus(Task.TaskStatus.TODO);
-        long inProgress  = taskRepository.countByStatus(Task.TaskStatus.IN_PROGRESS);
-        long done        = taskRepository.countByStatus(Task.TaskStatus.DONE);
-        long cancelled   = taskRepository.countByStatus(Task.TaskStatus.CANCELLED);
-        return new TaskStats(total, todo, inProgress, done, cancelled);
+    public Map<String, Long> getStats() {
+        return Map.of(
+            "total",      taskRepository.count(),
+            "todo",       taskRepository.countByStatus(Task.TaskStatus.TODO),
+            "inProgress", taskRepository.countByStatus(Task.TaskStatus.IN_PROGRESS),
+            "done",       taskRepository.countByStatus(Task.TaskStatus.DONE),
+            "cancelled",  taskRepository.countByStatus(Task.TaskStatus.CANCELLED)
+        );
     }
-
-    public record TaskStats(long total, long todo,
-                            long inProgress, long done, long cancelled) {}
 }

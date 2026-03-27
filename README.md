@@ -110,3 +110,15 @@ Day 9: Spring Boot Fundamentals
 - Explored Spring Profiles to manage different configurations for development and production environments
 - Built a **Task Manager Backend** project by wiring components using Spring Boot
 - Reviewed key concepts through a mini quiz and recap session
+
+Day 10: REST API Design & HTTP Deep Dive
+- Learned the fundamentals of REST architecture and its core principles for designing scalable APIs
+- Explored HTTP methods such as GET, POST, PUT, DELETE, and PATCH and their real-world usage
+- Studied HTTP status codes and how they communicate the result of API requests
+- Understood the importance of DTOs and why entities should not be exposed directly in APIs
+- Practiced using ResponseEntity to gain full control over HTTP responses including status and headers
+- Implemented global exception handling using @ControllerAdvice for clean and consistent error handling
+- Learned request validation using @Valid and how to enforce input constraints
+- Explored API versioning strategies used in real-world applications
+- Enhanced the **Task Manager API** project to production-level quality with proper structure and best practices
+- Reviewed all concepts through a mini quiz and recap session
