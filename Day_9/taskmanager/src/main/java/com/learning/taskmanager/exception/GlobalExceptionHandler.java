@@ -41,6 +41,15 @@ public class GlobalExceptionHandler {
             .body(ApiResponse.error(ex.getMessage(), "NOT_FOUND"));
     }
 
+    // Duplicate resource (e.g. username/email already taken)
+    @ExceptionHandler(DuplicateResourceException.class)
+    public ResponseEntity<ApiResponse<Void>>
+    handleDuplicate(DuplicateResourceException ex) {
+        return ResponseEntity
+            .status(HttpStatus.CONFLICT)
+            .body(ApiResponse.error(ex.getMessage(), "DUPLICATE_RESOURCE"));
+    }
+
     // Bad argument
     @ExceptionHandler(IllegalArgumentException.class)
     public ResponseEntity<ApiResponse<Void>>

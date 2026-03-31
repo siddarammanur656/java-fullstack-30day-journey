@@ -7,10 +7,18 @@ import jakarta.validation.Valid;
 import org.springframework.http.*;
 import org.springframework.web.bind.annotation.*;
 
-import java.net.URI;
 import java.util.List;
 import java.util.Map;
 
+/**
+ * TaskController — legacy endpoints kept for backward compatibility.
+ *
+ * NOTE (Day 11): The preferred API is now user-scoped:
+ *   POST /api/v1/users/{userId}/tasks
+ *   GET  /api/v1/users/{userId}/tasks
+ *
+ * These flat endpoints remain for listing, searching, updating status, etc.
+ */
 @RestController
 @RequestMapping("/api/v1/tasks")
 public class TaskController {
@@ -41,7 +49,7 @@ public class TaskController {
         );
     }
 
-    // GET /api/v1/tasks/1
+    // GET /api/v1/tasks/{id}
     @GetMapping("/{id}")
     public ResponseEntity<ApiResponse<TaskResponseDTO>>
     getById(@PathVariable Long id) {
@@ -53,28 +61,11 @@ public class TaskController {
         );
     }
 
-    // POST /api/v1/tasks
-    @PostMapping
-    public ResponseEntity<ApiResponse<TaskResponseDTO>>
-    create(@Valid @RequestBody TaskRequestDTO dto) {
-
-        Task created = taskService.create(dto);
-        URI location = URI.create("/api/v1/tasks/" + created.getId());
-
-        return ResponseEntity
-            .created(location)
-            .body(ApiResponse.success(
-                TaskResponseDTO.from(created),
-                "Task created successfully"
-            ));
-    }
-
-    // PUT /api/v1/tasks/1
+    // PUT /api/v1/tasks/{id}
     @PutMapping("/{id}")
     public ResponseEntity<ApiResponse<TaskResponseDTO>>
     update(@PathVariable Long id,
            @Valid @RequestBody TaskRequestDTO dto) {
-
         return ResponseEntity.ok(
             ApiResponse.success(
                 TaskResponseDTO.from(taskService.update(id, dto)),
@@ -83,7 +74,7 @@ public class TaskController {
         );
     }
 
-    // PATCH /api/v1/tasks/1/status
+    // PATCH /api/v1/tasks/{id}/status
     // Body: {"status": "IN_PROGRESS"}
     @PatchMapping("/{id}/status")
     public ResponseEntity<ApiResponse<TaskResponseDTO>>
@@ -92,8 +83,7 @@ public class TaskController {
 
         String statusStr = body.get("status");
         if (statusStr == null)
-            throw new IllegalArgumentException(
-                "Body must contain 'status' field");
+            throw new IllegalArgumentException("Body must contain 'status' field");
 
         Task.TaskStatus newStatus;
         try {
@@ -106,14 +96,13 @@ public class TaskController {
 
         return ResponseEntity.ok(
             ApiResponse.success(
-                TaskResponseDTO.from(
-                    taskService.updateStatus(id, newStatus)),
+                TaskResponseDTO.from(taskService.updateStatus(id, newStatus)),
                 "Status updated to " + newStatus
             )
         );
     }
 
-    // DELETE /api/v1/tasks/1
+    // DELETE /api/v1/tasks/{id}
     @DeleteMapping("/{id}")
     public ResponseEntity<ApiResponse<Void>>
     delete(@PathVariable Long id) {

@@ -122,3 +122,14 @@ Day 10: REST API Design & HTTP Deep Dive
 - Explored API versioning strategies used in real-world applications
 - Enhanced the **Task Manager API** project to production-level quality with proper structure and best practices
 - Reviewed all concepts through a mini quiz and recap session
+
+Day 11: Spring Data JPA Deep Dive
+- Reviewed JPA fundamentals and understood the entity lifecycle from object creation to database persistence
+- Learned different entity relationships including One-to-One, One-to-Many, Many-to-One, and Many-to-Many
+- Explored lazy vs eager loading and how fetching strategies impact performance
+- Understood the N+1 problem and techniques to identify and fix it using optimized queries
+- Studied JPQL, named queries, and projections for flexible and efficient data retrieval
+- Implemented pagination and sorting using Pageable for handling large datasets
+- Learned database versioning and migrations using Flyway
+- Enhanced the **Task Manager** project by implementing user-task relationships where users own tasks
+- Reviewed all concepts through a mini quiz and recap session

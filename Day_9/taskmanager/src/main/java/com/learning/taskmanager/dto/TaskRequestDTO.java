@@ -9,10 +9,10 @@ public class TaskRequestDTO {
     @NotBlank(message = "Title is required")
     @Size(min = 2, max = 100,
           message = "Title must be between 2 and 100 characters")
-    private String title;
+    private String taskTitle;
 
-    @Size(max = 500,
-          message = "Description cannot exceed 500 characters")
+    @Size(max = 1000,
+          message = "Description cannot exceed 1000 characters")
     private String description;
 
     @Min(value = 1, message = "Priority must be at least 1")
@@ -23,14 +23,14 @@ public class TaskRequestDTO {
     private LocalDateTime dueDate;
 
     // Getters
-    public String        getTitle()       { return title; }
+    public String        getTaskTitle()   { return taskTitle; }
     public String        getDescription() { return description; }
     public int           getPriority()    { return priority; }
     public LocalDateTime getDueDate()     { return dueDate; }
 
     // Setters
-    public void setTitle(String t)         { this.title = t; }
-    public void setDescription(String d)   { this.description = d; }
-    public void setPriority(int p)         { this.priority = p; }
-    public void setDueDate(LocalDateTime d){ this.dueDate = d; }
+    public void setTaskTitle(String t)       { this.taskTitle = t; }
+    public void setDescription(String d)     { this.description = d; }
+    public void setPriority(int p)           { this.priority = p; }
+    public void setDueDate(LocalDateTime d)  { this.dueDate = d; }
 }
